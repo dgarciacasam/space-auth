@@ -22,14 +22,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.dgarciacasam.authService.Exceptions.UserAlreadyExistsException;
-import com.dgarciacasam.authService.Models.LoginRequest;
-import com.dgarciacasam.authService.Models.RegisterRequest;
-import com.dgarciacasam.authService.Models.User;
-import com.dgarciacasam.authService.Models.UserResponse;
-import com.dgarciacasam.authService.Repositories.AuthRepository;
-import com.dgarciacasam.authService.Services.AuthService;
-import com.dgarciacasam.authService.Services.JwtService;
+import com.dgarciacasam.authService.exceptions.UserAlreadyExistsException;
+import com.dgarciacasam.authService.models.LoginRequest;
+import com.dgarciacasam.authService.models.RegisterRequest;
+import com.dgarciacasam.authService.models.UserResponse;
+import com.dgarciacasam.authService.models.entity.User;
+import com.dgarciacasam.authService.repositories.AuthRepository;
+import com.dgarciacasam.authService.services.AuthService;
+import com.dgarciacasam.authService.services.JwtService;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {

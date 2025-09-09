@@ -1,4 +1,4 @@
-package com.dgarciacasam.authService.Models;
+package com.dgarciacasam.authService.models.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

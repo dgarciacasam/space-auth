@@ -1,4 +1,4 @@
-package com.dgarciacasam.authService.Models;
+package com.dgarciacasam.authService.models;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -7,7 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class UserPrincipal implements UserDetails{
+import com.dgarciacasam.authService.models.entity.User;
+
+public class UserPrincipal implements UserDetails {
     private User user;
 
     public UserPrincipal(User user) {
@@ -28,5 +30,9 @@ public class UserPrincipal implements UserDetails{
     public String getUsername() {
         return this.user.getUsername();
     }
-    
+
+    public Long getId() {
+        return this.user.getId();
+    }
+
 }

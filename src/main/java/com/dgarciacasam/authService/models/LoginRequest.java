@@ -1,4 +1,4 @@
-package com.dgarciacasam.authService.Models;
+package com.dgarciacasam.authService.models;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

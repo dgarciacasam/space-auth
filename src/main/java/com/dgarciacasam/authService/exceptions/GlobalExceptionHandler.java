@@ -1,4 +1,4 @@
-package com.dgarciacasam.authService.Exceptions;
+package com.dgarciacasam.authService.exceptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,15 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    
-    @ExceptionHandler(UserAlreadyExistsException.class)
+
     public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
-        log.error("Se ha producido un error inesperado: {}" , ex.getMessage());
+        log.error("Se ha producido un error inesperado: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado");
     }
 
