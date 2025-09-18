@@ -13,7 +13,8 @@ import com.dgarciacasam.authService.exceptions.UserAlreadyExistsException;
 import com.dgarciacasam.authService.models.LoginRequest;
 import com.dgarciacasam.authService.models.RegisterRequest;
 import com.dgarciacasam.authService.models.UserPrincipal;
-import com.dgarciacasam.authService.models.UserResponse;
+import com.dgarciacasam.authService.models.dto.AuthDTO;
+import com.dgarciacasam.authService.models.dto.UserDTO;
 import com.dgarciacasam.authService.models.entity.User;
 import com.dgarciacasam.authService.repositories.AuthRepository;
 
@@ -33,7 +34,7 @@ public class AuthService {
     @Autowired
     private JwtService jwtService;
 
-    public UserResponse register(RegisterRequest registerDTO) {
+    public AuthDTO register(RegisterRequest registerDTO) {
         log.info("Register request: {}", registerDTO);
         if (authRepository.existsByUsername(registerDTO.getUsername())
                 || authRepository.existsByEmail(registerDTO.getEmail())) {
@@ -45,14 +46,16 @@ public class AuthService {
         User newUser = new User(registerDTO.getUsername(), encoder.encode(registerDTO.getPassword()),
                 registerDTO.getEmail());
         User registeredUser = authRepository.save(newUser);
+
         String generatedToken = jwtService.generateToken(registeredUser.getUsername());
         String refreshToken = jwtService.generateToken(registeredUser.getUsername());
-        UserResponse response = new UserResponse(registeredUser.getId(), registeredUser.getUsername(), generatedToken,
-                refreshToken);
+
+        UserDTO user = new UserDTO(registeredUser.getId(), registeredUser.getUsername(), registeredUser.getEmail());
+        AuthDTO response = new AuthDTO(user, generatedToken, refreshToken);
         return response;
     }
 
-    public UserResponse login(LoginRequest loginDTO) {
+    public AuthDTO login(LoginRequest loginDTO) {
         log.info("Login request: {}", loginDTO);
 
         Authentication authentication = authenticationManager
@@ -63,10 +66,11 @@ public class AuthService {
 
         log.info("Login successful");
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
         String generatedToken = jwtService.generateToken(authentication.getName());
         String refreshToken = jwtService.generateToken(authentication.getName());
-        UserResponse response = new UserResponse(userPrincipal.getId(), userPrincipal.getUsername(), generatedToken,
-                refreshToken);
+        UserDTO user = new UserDTO(userPrincipal.getId(), userPrincipal.getUsername(), userPrincipal.getEmail());
+        AuthDTO response = new AuthDTO(user, generatedToken, refreshToken);
         return response;
     }
 
@@ -84,9 +88,9 @@ public class AuthService {
         return generatedToken;
     }
 
-    public UserResponse verify(String token) {
+    public AuthDTO verify(String token) {
         log.info("Verifying jwt");
-        UserResponse response = new UserResponse(null, null, token, null);
+        AuthDTO response = new AuthDTO(null, token, null);
         return response;
     }
 }

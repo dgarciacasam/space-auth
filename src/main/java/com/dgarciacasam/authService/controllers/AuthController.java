@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dgarciacasam.authService.services.AuthService;
+import com.dgarciacasam.authService.models.AuthRes;
 import com.dgarciacasam.authService.models.LoginRequest;
 import com.dgarciacasam.authService.models.RegisterRequest;
-import com.dgarciacasam.authService.models.UserRes;
-import com.dgarciacasam.authService.models.UserResponse;
+import com.dgarciacasam.authService.models.dto.AuthDTO;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,29 +30,30 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserRes> register(@Valid @RequestBody RegisterRequest registerRequest,
+    public ResponseEntity<AuthRes> register(@Valid @RequestBody RegisterRequest registerRequest,
             HttpServletResponse httpRes) {
         log.info("Register request: {}", registerRequest);
-        UserResponse response = authService.register(registerRequest);
-        UserRes res = new UserRes(response.getId(), response.getUsername());
+        AuthDTO auth = authService.register(registerRequest);
+        AuthRes res = new AuthRes(auth.getUser(), auth.getJwt());
+
         // Generate cookie with jwt
-        Cookie cookie = generateJwtCookie("jwt", response.getToken());
+        Cookie cookie = generateJwtCookie("refreshToken", auth.getRefreshToken());
         httpRes.addCookie(cookie);
 
         return ResponseEntity.ok(res);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserRes> login(@Valid @RequestBody LoginRequest loginRequest,
+    public ResponseEntity<AuthRes> login(@Valid @RequestBody LoginRequest loginRequest,
             HttpServletResponse httpRes) {
         log.info("Login request: {}", loginRequest);
-        UserResponse response = authService.login(loginRequest);
-        UserRes res = new UserRes(response.getId(), response.getUsername());
-        Cookie cookie = generateJwtCookie("jwt", response.getToken());
-        Cookie refreshCookie = generateJwtCookie("refreshToken", response.getRefreshToken());
-        httpRes.addCookie(cookie);
-        httpRes.addCookie(refreshCookie);
 
+        AuthDTO auth = authService.login(loginRequest);
+
+        Cookie refreshCookie = generateJwtCookie("refreshToken", auth.getRefreshToken());
+        AuthRes res = new AuthRes(auth.getUser(), auth.getJwt());
+
+        httpRes.addCookie(refreshCookie);
         return ResponseEntity.ok(res);
     }
 
@@ -89,7 +90,7 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<UserResponse> verify(@CookieValue(name = "jwt", required = false) String jwtCookie,
+    public ResponseEntity<AuthRes> verify(@CookieValue(name = "jwt", required = false) String jwtCookie,
             HttpServletRequest request,
             HttpServletResponse httpRes) {
         log.info("Verifying jwt");
@@ -98,13 +99,14 @@ public class AuthController {
             return ResponseEntity.status(401).body(null);
         }
 
-        UserResponse response = authService.verify(jwtCookie);
+        AuthDTO response = authService.verify(jwtCookie);
 
+        AuthRes res = new AuthRes(response.getUser(), response.getJwt());
         // Generate new cookie with the same token if it's still valid
-        Cookie cookie = generateJwtCookie("jwt", response.getToken());
+        Cookie cookie = generateJwtCookie("jwt", res.getJwt());
         httpRes.addCookie(cookie);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(res);
     }
 
     private Cookie generateJwtCookie(String tokenName, String token) {
