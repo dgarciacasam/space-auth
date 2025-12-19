@@ -8,10 +8,10 @@ import com.space.auth.config.JwtProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(JwtProperties.class)
-public class AuthServiceApplication {
+public class AuthApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AuthServiceApplication.class, args);
+		SpringApplication.run(AuthApplication.class, args);
 	}
 
 }

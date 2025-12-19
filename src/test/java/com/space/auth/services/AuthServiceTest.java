@@ -1,4 +1,4 @@
-package com.space.authService.auth_service;
+package com.space.auth.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,8 +29,6 @@ import com.space.auth.models.UserPrincipal;
 import com.space.auth.models.dto.AuthDTO;
 import com.space.auth.models.entity.User;
 import com.space.auth.repositories.AuthRepository;
-import com.space.auth.services.AuthService;
-import com.space.auth.services.JwtService;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
