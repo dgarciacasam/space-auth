@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.5</version>
+		<version>4.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.dgarciacasam</groupId>
+	<groupId>com.space</groupId>
 	<artifactId>space-auth</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>space-auth</name>
-	<description>Auth service for space-app</description>
+	<description>Auth service for Space app</description>
 	<url/>
 	<licenses>
 		<license/>
